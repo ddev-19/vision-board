@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Vision Board — Dev &amp; Swati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Caveat:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --midnight:#0b0e26;
+    --midnight-2:#161b47;
+    --void:#05061a;
+    --gold:#d4af37;
+    --gold-soft:#f3d98b;
+    --blush:#e9b4b4;
+    --sage:#8fb3a0;
+    --cream:#f8f3e7;
+    --ink:#241f38;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(211,175,55,0.08), transparent 45%),
+      radial-gradient(ellipse at 85% 15%, rgba(233,180,180,0.06), transparent 40%),
+      linear-gradient(180deg, var(--void) 0%, var(--midnight) 40%, var(--midnight-2) 100%);
+    color:var(--cream);
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+
+  .stars{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 20%, rgba(248,243,231,0.55), transparent),
+      radial-gradient(1.5px 1.5px at 80% 10%, rgba(248,243,231,0.4), transparent),
+      radial-gradient(1px 1px at 40% 35%, rgba(248,243,231,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 65% 60%, rgba(248,243,231,0.35), transparent),
+      radial-gradient(1px 1px at 25% 75%, rgba(248,243,231,0.45), transparent),
+      radial-gradient(1.5px 1.5px at 92% 45%, rgba(248,243,231,0.4), transparent),
+      radial-gradient(1px 1px at 55% 85%, rgba(248,243,231,0.35), transparent),
+      radial-gradient(1.5px 1.5px at 15% 55%, rgba(248,243,231,0.4), transparent);
+    background-repeat:repeat; background-size: 600px 600px;
+    animation: drift 90s linear infinite; opacity:0.8;
+  }
+  @keyframes drift{ from{background-position:0 0;} to{background-position:-600px 400px;} }
+  @media (prefers-reduced-motion: reduce){ .stars{ animation:none; } }
+
+  section{ position:relative; z-index:1; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height:78vh;
+    overflow:hidden;
+    padding: 7vh 6vw 8vh;
+    background-image:
+      linear-gradient(180deg, rgba(5,6,26,0.35) 0%, rgba(5,6,26,0.55) 55%, var(--midnight) 96%),
+      url('images/hero-visionboard.jpg');
+    background-size:cover; background-position:center 30%;
+  }
+
+  .shooting-stars{
+    position:absolute; inset:0; z-index:1;
+    overflow:hidden; pointer-events:none;
+  }
+  .shooting-star{
+    position:absolute;
+    height:2px;
+    background: linear-gradient(to left, rgba(255,255,255,0.95), rgba(243,217,139,0.35) 40%, transparent);
+    border-radius:999px;
+    transform-origin: 100% 50%;
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.65));
+    will-change: transform, opacity;
+  }
+
+  .hero-content{
+    position:relative; z-index:2;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    min-height:64vh;
+  }
+  .eyebrow{ font-family:'Jost',sans-serif; letter-spacing:0.42em; text-transform:uppercase; font-size:0.72rem; color:var(--gold-soft); margin-bottom:1.6rem; font-weight:500; }
+  .hero h1{ font-family:'Playfair Display',serif; font-style:italic; font-weight:500; font-size:clamp(2.4rem,6.5vw,4.6rem); margin:0 0 0.4rem; color:var(--cream); text-shadow:0 4px 40px rgba(0,0,0,0.5); }
+  .hero .names{ font-family:'Caveat',cursive; font-size:clamp(2.2rem,5.5vw,3.6rem); color:var(--gold); margin:0.2rem 0 1.6rem; font-weight:600; }
+  .hero .mantra{ max-width:560px; font-size:1rem; line-height:1.75; color:var(--cream); opacity:0.88; font-weight:300; }
+  .hero .mantra em{ font-style:italic; color:var(--gold-soft); }
+
+  /* ---------- manifesto ---------- */
+  .manifesto{ max-width:700px; margin:0 auto; padding:7vh 6vw 4vh; text-align:center; }
+  .manifesto .rule{ width:64px; height:1px; background:var(--gold); margin:0 auto 1.8rem; opacity:0.6; }
+  .manifesto p{ font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(1.1rem,2.2vw,1.4rem); line-height:1.65; color:var(--cream); opacity:0.92; margin:0 0 1.2rem; }
+  .manifesto .attrib{ font-size:0.76rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-soft); opacity:0.75; }
+
+  /* ---------- tabs / controls ---------- */
+  .controls{
+    position:sticky; top:0; z-index:20;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:1.2rem;
+    padding: 1.1rem 6vw;
+    background: rgba(11,14,38,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid rgba(212,175,55,0.18);
+  }
+  .tabs{ display:flex; gap:0.4rem; background:rgba(248,243,231,0.05); border:1px solid rgba(212,175,55,0.25); border-radius:999px; padding:4px; }
+  .tab-btn{
+    font-family:'Jost',sans-serif; font-size:0.82rem; letter-spacing:0.04em; font-weight:500;
+    color:var(--cream); opacity:0.7; background:transparent; border:none; border-radius:999px;
+    padding:0.55rem 1.2rem; cursor:pointer; transition: all 0.3s ease;
+  }
+  .tab-btn.active{ background: var(--gold); color:#241f38; opacity:1; font-weight:600; }
+  .tab-btn:hover:not(.active){ opacity:1; color:var(--gold-soft); }
+  .tab-btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+  .add-btn{
+    font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; letter-spacing:0.03em;
+    color:var(--void); background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    border:none; border-radius:999px; padding:0.62rem 1.4rem; cursor:pointer;
+    display:inline-flex; align-items:center; gap:0.4rem;
+    box-shadow: 0 6px 18px -6px rgba(212,175,55,0.6);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .add-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 24px -6px rgba(212,175,55,0.7); }
+  .add-btn:focus-visible{ outline:2px solid var(--cream); outline-offset:2px; }
+
+  /* ---------- board ---------- */
+  .board-heading{ text-align:center; padding:4.5vh 6vw 1.5vh; }
+  .board-heading h2{ font-family:'Playfair Display',serif; font-weight:600; font-size:clamp(1.7rem,3.6vw,2.4rem); margin:0 0 0.5rem; color:var(--cream); }
+  .board-heading p{ font-family:'Caveat',cursive; font-size:1.3rem; color:var(--gold-soft); margin:0; }
+
+  .board{ position:relative; max-width:1280px; margin:2vh auto 10vh; padding:2vh 6vw; min-height:200px; }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap:30px;
+    align-items:start;
+  }
+
+  .empty-note{
+    grid-column:1/-1; text-align:center; font-family:'Caveat',cursive; font-size:1.4rem;
+    color: rgba(248,243,231,0.55); padding:4vh 0;
+  }
+
+  .card{
+    position:relative; border-radius:4px; overflow:visible;
+    background:var(--cream); padding:14px 14px 44px;
+    box-shadow:0 18px 40px -14px rgba(0,0,0,0.55);
+    transition: transform 0.45s cubic-bezier(.22,1,.36,1), box-shadow 0.45s ease;
+  }
+  .card .frame{ position:relative; width:100%; height:250px; overflow:hidden; background:#000; border-radius:2px; }
+  .card img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition: transform 0.7s cubic-bezier(.22,1,.36,1), filter 0.6s ease; filter:saturate(0.94) brightness(0.96); }
+
+  .card .pin{ position:absolute; top:-9px; left:50%; transform:translateX(-50%); width:16px; height:16px; border-radius:50%; background: radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 60%, #9c7a1c 100%); box-shadow:0 3px 6px rgba(0,0,0,0.5); z-index:3; }
+
+  .card .caption{ position:absolute; left:14px; right:14px; bottom:12px; font-family:'Caveat',cursive; font-weight:600; font-size:1.28rem; color:var(--ink); line-height:1.1; }
+  .card .caption .sub{ display:block; font-family:'Jost',sans-serif; font-weight:400; font-size:0.64rem; letter-spacing:0.13em; text-transform:uppercase; color:#6b6480; margin-top:3px; opacity:0; max-height:0; transition:opacity 0.4s ease 0.05s, max-height 0.4s ease; }
+  .card:hover .caption .sub, .card:focus-within .caption .sub{ opacity:1; max-height:20px; }
+
+  .card:hover, .card:focus-within{ transform: rotate(0deg) scale(1.045) translateY(-6px); box-shadow:0 26px 55px -12px rgba(212,175,55,0.35), 0 0 0 1px rgba(212,175,55,0.4); z-index:5; }
+  .card:hover img, .card:focus-within img{ transform:scale(1.08); filter:saturate(1.05) brightness(1); }
+
+  .owner-tag{
+    position:absolute; top:10px; right:10px; z-index:3;
+    font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.08em; text-transform:uppercase;
+    background:rgba(36,31,56,0.75); color:var(--gold-soft); padding:3px 8px; border-radius:999px;
+    border:1px solid rgba(212,175,55,0.4);
+  }
+
+  .card .del{
+    position:absolute; top:8px; left:8px; z-index:4;
+    width:22px; height:22px; border-radius:50%; border:none;
+    background:rgba(36,31,56,0.75); color:var(--gold-soft); font-size:0.9rem; line-height:1;
+    cursor:pointer; opacity:0; transition:opacity 0.25s ease;
+  }
+  .card:hover .del, .card:focus-within .del{ opacity:1; }
+  .del:hover{ background:#8a2f2f; color:#fff; }
+
+  /* ---------- modal ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(5,6,26,0.72); backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:4vh 5vw;
+  }
+  .modal-backdrop.open{ display:flex; }
+  .modal{
+    width:100%; max-width:440px; background: var(--midnight-2);
+    border:1px solid rgba(212,175,55,0.35); border-radius:14px;
+    padding:2rem 1.8rem; box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
+  }
+  .modal h3{ font-family:'Playfair Display',serif; font-style:italic; font-size:1.5rem; margin:0 0 1.4rem; color:var(--gold-soft); text-align:center; }
+  .field{ margin-bottom:1.1rem; }
+  .field label{ display:block; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:0.4rem; opacity:0.85; }
+  .field input, .field select{
+    width:100%; padding:0.65rem 0.8rem; border-radius:6px; border:1px solid rgba(248,243,231,0.2);
+    background:rgba(248,243,231,0.06); color:var(--cream); font-family:'Jost',sans-serif; font-size:0.9rem;
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--gold); }
+  .field input::placeholder{ color:rgba(248,243,231,0.35); }
+  .owner-choice{ display:flex; gap:0.5rem; }
+  .owner-choice label{
+    flex:1; text-align:center; padding:0.55rem 0; border-radius:6px; border:1px solid rgba(248,243,231,0.2);
+    cursor:pointer; font-size:0.78rem; letter-spacing:0.03em; text-transform:none; color:var(--cream); opacity:0.75;
+  }
+  .owner-choice input{ display:none; }
+  .owner-choice input:checked + span{ font-weight:600; }
+  .owner-choice label:has(input:checked){ border-color:var(--gold); background:rgba(212,175,55,0.15); color:var(--gold-soft); opacity:1; }
+
+  .modal-actions{ display:flex; gap:0.7rem; margin-top:1.6rem; }
+  .btn{ flex:1; padding:0.7rem 1rem; border-radius:8px; border:none; font-family:'Jost',sans-serif; font-size:0.85rem; font-weight:500; cursor:pointer; }
+  .btn-primary{ background:linear-gradient(135deg, var(--gold-soft), var(--gold)); color:var(--void); }
+  .btn-secondary{ background:transparent; color:var(--cream); border:1px solid rgba(248,243,231,0.25); }
+  .btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .form-note{ font-size:0.72rem; color:rgba(248,243,231,0.5); margin-top:-0.4rem; margin-bottom:1rem; }
+  .form-note.error{ color:#e08a8a; }
+
+  /* ---------- footer ---------- */
+  footer{ text-align:center; padding:6vh 6vw 8vh; border-top:1px solid rgba(212,175,55,0.18); }
+  footer .signature{ font-family:'Caveat',cursive; font-size:2rem; color:var(--gold); margin-bottom:0.5rem; }
+  footer .fine{ font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--cream); opacity:0.5; }
+
+  .sync-note{ text-align:center; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:rgba(248,243,231,0.4); padding-bottom:2vh; }
+  .sync-note.error{ color:#e08a8a; }
+</style>
+</head>
+<body>
+
+<div class="stars" aria-hidden="true"></div>
+
+<section class="hero">
+  <div class="shooting-stars" id="shootingStars" aria-hidden="true"></div>
+  <div class="hero-content">
+    <p class="eyebrow">Ask &middot; Believe &middot; Receive</p>
+    <h1>The Vision Board</h1>
+    <p class="names">Dev &amp; Swati</p>
+    <p class="mantra">Every thought is a seed. This is the quiet corner of the universe where we put ours down on paper — <em>on purpose, together</em> — and watch for the ways life keeps its word.</p>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="rule"></div>
+  <p>&ldquo;Whatever we can conceive and believe, we can achieve.&rdquo;</p>
+  <p class="attrib">a reminder we keep close</p>
+</section>
+
+<div class="controls">
+  <div class="tabs" role="tablist" aria-label="Whose dreams to show">
+    <button class="tab-btn active" data-owner="both" role="tab" aria-selected="true">For Both</button>
+    <button class="tab-btn" data-owner="swati" role="tab" aria-selected="false">For Swati</button>
+    <button class="tab-btn" data-owner="dev" role="tab" aria-selected="false">For Dev</button>
+  </div>
+  <button class="add-btn" id="openModal">&#10022; Add a dream</button>
+</div>
+
+<section class="board-heading">
+  <h2 id="boardTitle">Five Dreams, One Universe</h2>
+  <p id="boardSub">pinned with intention</p>
+</section>
+
+<section class="board">
+  <div class="grid" id="grid"></div>
+</section>
+
+<p class="sync-note" id="syncNote">connecting to the shared board&hellip;</p>
+
+<footer>
+  <p class="signature">Dev &amp; Swati</p>
+  <p class="fine">manifesting since 2026</p>
+</footer>
+
+<!-- ---------- Add a dream modal ---------- -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle">Add a dream</h3>
+    <form id="dreamForm">
+      <div class="field">
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="e.g. Learn to surf" required maxlength="60">
+      </div>
+      <div class="field">
+        <label for="subtitle">Short caption (optional)</label>
+        <input type="text" id="subtitle" placeholder="e.g. Bali, 2027" maxlength="60">
+      </div>
+      <div class="field">
+        <label>Image</label>
+        <div class="owner-choice" id="imageModeToggle">
+          <label><input type="radio" name="imageMode" value="link" checked><span>Paste a link</span></label>
+          <label><input type="radio" name="imageMode" value="upload"><span>Upload a photo</span></label>
+        </div>
+      </div>
+      <div class="field" id="imageUrlField">
+        <input type="url" id="imageUrl" placeholder="https://...">
+        <p class="form-note">Paste a link to any image online — e.g. from Google Photos, Unsplash, or Pinterest (right-click an image → Copy Image Address).</p>
+      </div>
+      <div class="field" id="imageUploadField" style="display:none;">
+        <input type="file" id="imageFile" accept="image/*">
+        <p class="form-note" id="uploadStatus">Uploads go to a free image host and the link gets pinned automatically.</p>
+      </div>
+      <div class="field">
+        <label>Add this for</label>
+        <div class="owner-choice">
+          <label><input type="radio" name="owner" value="both" checked><span>Both</span></label>
+          <label><input type="radio" name="owner" value="swati"><span>Swati</span></label>
+          <label><input type="radio" name="owner" value="dev"><span>Dev</span></label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelModal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn">Pin it</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  // Shooting stars — continuous, randomized direction/speed/start
+  // ============================================================
+  (function(){
+    const field = document.getElementById('shootingStars');
+    if (!field) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return; // respect user preference — skip the animation entirely
+
+    const rand = (min, max) => Math.random() * (max - min) + min;
+
+    function spawnStar(){
+      const star = document.createElement('div');
+      star.className = 'shooting-star';
+
+      const angle = rand(0, 360);              // fully random direction — left-right, bottom-top, diagonals, all of it
+      const rad = angle * Math.PI / 180;
+      const travel = rand(38, 78);              // vmax units it will travel
+      const dx = Math.cos(rad) * travel;
+      const dy = Math.sin(rad) * travel;
+      const duration = rand(1500, 3200);        // ms
+      const length = rand(60, 130);             // px, streak length
+      const thickness = rand(1.4, 2.4);         // px
+
+      star.style.left = rand(-10, 110) + '%';
+      star.style.top = rand(-10, 110) + '%';
+      star.style.width = length + 'px';
+      star.style.height = thickness + 'px';
+      star.style.rotate = angle + 'deg';   // fixed orientation, independent of position
+
+      field.appendChild(star);
+
+      const anim = star.animate([
+        { translate: '0 0', opacity: 0 },
+        { offset: 0.08, opacity: 1 },
+        { offset: 0.72, opacity: 1 },
+        { translate: `${dx}vmax ${dy}vmax`, opacity: 0 }
+      ], { duration, easing: 'linear' });
+
+      anim.onfinish = () => star.remove();
+    }
+
+    // a few independent, staggered spawn loops so stars overlap naturally instead of pulsing in sync
+    function loop(minDelay, maxDelay){
+      spawnStar();
+      setTimeout(() => loop(minDelay, maxDelay), rand(minDelay, maxDelay));
+    }
+    loop(700, 1600);
+    setTimeout(() => loop(900, 2000), 400);
+    setTimeout(() => loop(1100, 2400), 900);
+  })();
+
+  // Safety net: if nothing has updated the sync note after a few seconds,
+  // the Firebase module script itself likely failed to load — most often
+  // because the page was opened directly as a file:// instead of being
+  // served over http/https. Surface that instead of hanging silently.
+  setTimeout(function(){
+    const note = document.getElementById('syncNote');
+    if (note && note.textContent.indexOf('connecting') !== -1){
+      note.textContent = "still not connecting — open the browser console (F12) for the error, and check SETUP.md's troubleshooting section";
+      note.classList.add('error');
+    }
+  }, 4000);
+</script>
+
+<script type="module">
+  // ============================================================
+  // 1) FIREBASE SETUP — replace with your own project's config.
+  //    See the setup notes shared alongside this file for how to
+  //    create a free Firebase project and get these values.
+  // ============================================================
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, deleteDoc, doc,
+    onSnapshot, serverTimestamp, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBkIdcoYY5nFeMYh0Qkq-3SkDh7ur0aVXI",
+    authDomain: "dev-swati-vision-board.firebaseapp.com",
+    projectId: "dev-swati-vision-board",
+    storageBucket: "dev-swati-vision-board.firebasestorage.app",
+    messagingSenderId: "623819990222",
+    appId: "1:623819990222:web:36b50543eed158b20a1c9f"
+  };
+
+  // Free image host for the "Upload a photo" option (no billing card needed).
+  // Get a free key at https://api.imgbb.com/ and paste it here — see SETUP.md.
+  const IMGBB_API_KEY = "b14840501ee4a5dc4c9987ac4b705387";
+
+  const syncNote = document.getElementById('syncNote');
+  let db = null;
+  let firebaseReady = false;
+
+  try {
+    if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      firebaseReady = true;
+    } else {
+      syncNote.textContent = "shared 'add a dream' is not connected yet — see setup notes to enable it";
+      syncNote.classList.add('error');
+    }
+  } catch (e) {
+    console.error(e);
+    syncNote.textContent = "could not connect: " + (e && e.message ? e.message : e);
+    syncNote.classList.add('error');
+  }
+
+  // ============================================================
+  // 2) SEED DREAMS — the five original cards, always "both"
+  // ============================================================
+  const seedDreams = [
+    { id:'seed-home', title:'Apna Ghar', subtitle:'Home Sweet Home · 2027', imageUrl:'images/home.jpg', owner:'both', rotate:-1.4, seed:true },
+    { id:'seed-business', title:'Our Own Business', subtitle:"Building it together", imageUrl:'images/business.jpg', owner:'both', rotate:1.1, seed:true },
+    { id:'seed-cars', title:'The Garage', subtitle:"Cars we're working towards", imageUrl:'images/cars.jpg', owner:'both', rotate:1.6, seed:true },
+    { id:'seed-fitness', title:'Stronger Together', subtitle:'Stay healthy & happy', imageUrl:'images/fitness.jpg', owner:'both', rotate:-1, seed:true },
+    { id:'seed-travel', title:'Trips & Travels', subtitle:'Explore the world together', imageUrl:'images/travel.jpg', owner:'both', rotate:1.3, seed:true },
+  ];
+
+  let addedDreams = [];
+  let currentTab = 'both';
+
+  const grid = document.getElementById('grid');
+  const boardTitle = document.getElementById('boardTitle');
+  const boardSub = document.getElementById('boardSub');
+
+  const tabCopy = {
+    both: { title:'Five Dreams, One Universe', sub:'pinned with intention' },
+    swati: { title:"Swati's Dreams", sub:'just for her' },
+    dev: { title:"Dev's Dreams", sub:'just for him' },
+  };
+
+  function stableRotate(id){
+    let h = 0;
+    for (let i=0;i<id.length;i++) h = (h*31 + id.charCodeAt(i)) % 1000;
+    return ((h/1000)*4.2 - 2.1).toFixed(2);
+  }
+
+  function render(){
+    const copy = tabCopy[currentTab];
+    boardTitle.textContent = copy.title;
+    boardSub.textContent = copy.sub;
+
+    const items = [...seedDreams, ...addedDreams].filter(d => d.owner === currentTab);
+    grid.innerHTML = '';
+
+    if (items.length === 0){
+      const p = document.createElement('p');
+      p.className = 'empty-note';
+      p.textContent = "nothing pinned here yet — add the first one";
+      grid.appendChild(p);
+      return;
+    }
+
+    items.forEach(d => {
+      const rotate = d.rotate !== undefined ? d.rotate : stableRotate(d.id);
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.style.transform = `rotate(${rotate}deg)`;
+      card.tabIndex = 0;
+
+      card.innerHTML = `
+        <div class="pin" aria-hidden="true"></div>
+        ${!d.seed ? `<span class="owner-tag">${d.owner}</span>` : ''}
+        ${!d.seed ? `<button class="del" title="Remove this dream" aria-label="Remove this dream">&times;</button>` : ''}
+        <div class="frame">
+          <img src="${d.imageUrl}" alt="${d.title}" loading="lazy"
+               onerror="this.closest('.card').querySelector('.frame').style.background='linear-gradient(135deg,#2a2550,#161b47)'">
+        </div>
+        <p class="caption">${d.title}${d.subtitle ? `<span class="sub">${d.subtitle}</span>` : ''}</p>
+      `;
+
+      if (!d.seed){
+        card.querySelector('.del').addEventListener('click', (e) => {
+          e.stopPropagation();
+          removeDream(d.id);
+        });
+      }
+
+      grid.appendChild(card);
+    });
+  }
+
+  // ============================================================
+  // 3) Live sync with Firestore (shared between Dev & Swati)
+  // ============================================================
+  if (firebaseReady){
+    const q = query(collection(db, 'dreams'), orderBy('createdAt', 'asc'));
+    onSnapshot(q, (snap) => {
+      addedDreams = snap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+      render();
+      syncNote.textContent = 'synced with the shared board';
+      syncNote.classList.remove('error');
+    }, (err) => {
+      console.error(err);
+      syncNote.textContent = 'could not sync: ' + (err && (err.code || err.message) ? (err.code || err.message) : err);
+      syncNote.classList.add('error');
+    });
+  } else {
+    render();
+  }
+
+  async function addDream({ title, subtitle, imageUrl, owner }){
+    if (!firebaseReady){
+      alert("The shared board isn't connected yet, so this won't be saved or shown to your partner. See the setup notes to enable it.");
+      return;
+    }
+    await addDoc(collection(db, 'dreams'), {
+      title, subtitle, imageUrl, owner, createdAt: serverTimestamp()
+    });
+  }
+
+  async function removeDream(id){
+    if (!firebaseReady) return;
+    if (!confirm('Remove this dream from the board?')) return;
+    await deleteDoc(doc(db, 'dreams', id));
+  }
+
+  // ============================================================
+  // 4) Tabs
+  // ============================================================
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      currentTab = btn.dataset.owner;
+      render();
+    });
+  });
+
+  // ============================================================
+  // 5) Modal
+  // ============================================================
+  const backdrop = document.getElementById('modalBackdrop');
+  const openBtn = document.getElementById('openModal');
+  const cancelBtn = document.getElementById('cancelModal');
+  const form = document.getElementById('dreamForm');
+  const imageUrlField = document.getElementById('imageUrlField');
+  const imageUploadField = document.getElementById('imageUploadField');
+  const imageUrlInput = document.getElementById('imageUrl');
+  const imageFileInput = document.getElementById('imageFile');
+  const uploadStatus = document.getElementById('uploadStatus');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function openModal(){
+    backdrop.classList.add('open');
+    document.getElementById('title').focus();
+  }
+  function closeModal(){
+    backdrop.classList.remove('open');
+    form.reset();
+    imageUrlField.style.display = '';
+    imageUploadField.style.display = 'none';
+    uploadStatus.textContent = 'Uploads go to a free image host and the link gets pinned automatically.';
+    uploadStatus.classList.remove('error');
+  }
+
+  openBtn.addEventListener('click', openModal);
+  cancelBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });
+
+  document.getElementById('imageModeToggle').addEventListener('change', (e) => {
+    const mode = e.target.value;
+    imageUrlField.style.display = mode === 'link' ? '' : 'none';
+    imageUploadField.style.display = mode === 'upload' ? '' : 'none';
+  });
+
+  async function uploadToImgbb(file){
+    if (IMGBB_API_KEY === "YOUR_IMGBB_KEY"){
+      throw new Error("Photo upload isn't connected yet — add a free imgbb API key (see SETUP.md), or use 'Paste a link' instead.");
+    }
+    const body = new FormData();
+    body.append('image', file);
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method:'POST', body });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error?.message || 'upload failed');
+    return data.data.url;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('title').value.trim();
+    const subtitle = document.getElementById('subtitle').value.trim();
+    const owner = form.querySelector('input[name="owner"]:checked').value;
+    const mode = form.querySelector('input[name="imageMode"]:checked').value;
+    if (!title) return;
+
+    let imageUrl = '';
+    submitBtn.disabled = true;
+
+    try {
+      if (mode === 'link'){
+        imageUrl = imageUrlInput.value.trim();
+        if (!imageUrl){ alert('Add an image link, or switch to Upload a photo.'); return; }
+      } else {
+        const file = imageFileInput.files[0];
+        if (!file){ alert('Choose a photo to upload, or switch to Paste a link.'); return; }
+        uploadStatus.textContent = 'Uploading…';
+        uploadStatus.classList.remove('error');
+        imageUrl = await uploadToImgbb(file);
+      }
+
+      await addDream({ title, subtitle, imageUrl, owner });
+      closeModal();
+      document.querySelector(`.tab-btn[data-owner="${owner}"]`).click();
+    } catch (err) {
+      console.error(err);
+      uploadStatus.textContent = err.message || 'something went wrong';
+      uploadStatus.classList.add('error');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  render();
+</script>
+
+</body>
+</html>
